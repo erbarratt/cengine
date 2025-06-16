@@ -1,33 +1,24 @@
 cmake_minimum_required(VERSION 3.22)
-project(GameEngine C)
+project(GameEngine CXX)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+#define where to put the built exe after build
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# GLAD and GLFW
-add_library(glad external/glad/src/gl.c)
+#literally add directories to look for headers when using <> in includes
+include_directories(${CMAKE_SOURCE_DIR}/external/GLFW/include)
+include_directories(${CMAKE_SOURCE_DIR}/external/GLEW/include)
 
-include_directories(
-        include
-        external/glad/include
-        external/glfw/include
-)
-
-include(FetchContent)
-
-# Download GLFW automatically
-FetchContent_Declare(
-        glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw.git
-        GIT_TAG        latest
-)
-FetchContent_MakeAvailable(glfw)
+#where to look for the library files that we link below...
+link_directories(${CMAKE_SOURCE_DIR}/external/GLFW/lib-mingw-w64)
+link_directories(${CMAKE_SOURCE_DIR}/external/GLEW/lib/Release/x64)
 
 add_executable(GameEngine
-        main.c
-        src/core/window.c
-        src/renderer/renderer.c
+        src/main.cpp
         # add other modules here
 )
 
-target_link_libraries(GameEngine glfw glad ${CMAKE_DL_LIBS})
+target_link_libraries(GameEngine glfw3 glew32s opengl32)
+
+add_compile_definitions(GLEW_STATIC)
