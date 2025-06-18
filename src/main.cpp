@@ -3,12 +3,20 @@
 #include <GLFW/glfw3.h>
 
 #include "render/Shaders.hpp"
+#include "render/Renderer.hpp"
+#include "render/VertexBuffer.hpp"
+#include "render/IndexBuffer.hpp"
+
 
 int main()
 {
 	//Initialize GLFW
 	if (!glfwInit())
 		return -1;
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
 	GLFWwindow *window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
@@ -35,43 +43,31 @@ int main()
 		2,3,0
 	};
 
-	//vertex buffer
-		unsigned int buffer;
+	unsigned int VAO;
 
+	//vertexx array object
 		//generate n buffer "names" or "ids" stored as integers into the mem location provided
-		//remember an array without an index is the pointer, so "buffers" but a single uint would need to pass the pointer, so &buffer
-		glGenBuffers(1, &buffer);
+		glGenVertexArrays(1, &VAO);
 
-		//tell opengl we are now using the specified buffer object (by passing the id previously generated)
-		//IN the "target" type we specify, GL_ARRAY_BUFFER = Vertex Attributes
-		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		//tell opengl we are now using the specified ARRAY object (by passing the id previously generated)
+		glBindVertexArray(VAO);
 
-		//fill the currently bound buffer at the "target" with "size" bytes from a data object and hint at how it will be used
-		glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+	//vertex buffer object
+		VertexBuffer vbo(positions, sizeof(positions));
 
-		//enable a vertex attribute by index, for defining below...
+		//enable a vertex attribute by index ++OF THE VERTEXX ARRAY OBJECT++, for defining below...
 		glEnableVertexAttribArray(0);
 
 		//define the structure of our vertex attributes - in this case just a vec2 list of x,y coords.
-		//this vertex attributes has an index or "id" of 0, is comprised of "size" 2 things of "type" float
+		//this vertex attributes has an index or "id" of 0 ++OF THE VERTEXX ARRAY OBJECT++
+		//is comprised of "size" 2 things of "type" float
 		//we have already normalised the data
 		//to get to the same attrib of the next vertex, we need to move along "stride" bytes.
 		//to get to this attribute in the first vertex, how many bytes (as a void*) do we need to move along the data?
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
-	//index buffer
-		unsigned int indexBuffer;
-		//generate n buffer "names" or "ids" stored as integers into the mem location provided
-		//remember an array without an index is the pointer, so "buffers" but a single uint would need to pass the pointer, so &buffer
-		glGenBuffers(1, &indexBuffer);
-
-		//tell opengl we are now using the specified buffer object (by passing the id previously generated)
-		//IN the "target" type we specify, GL_ARRAY_BUFFER = Vertex Attributes
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-		//fill the currently bound buffer at the "target" with "size" bytes from a data object and hint at how it will be used
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
+	//index buffer object
+		IndexBuffer ibo(indices, 6);
 
 	//for the next draw call, use the shader program defined in this file...
 	const unsigned int program = MarMyte::Shaders::createShaderProgram("../../res/shaders/basic.shader");
