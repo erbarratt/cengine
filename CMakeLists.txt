@@ -16,6 +16,7 @@ link_directories(${CMAKE_SOURCE_DIR}/external/GLEW/lib/Release/x64)
 
 add_executable(GameEngine
         src/main.cpp
+        src/render/shaders.cpp
         # add other modules here
 )
 
