@@ -1,17 +1,22 @@
 #include "Renderer.hpp"
 
-#include <iostream>
-
-void GLClearError()
+namespace MarMyte
 {
-	while (glGetError() != GL_NO_ERROR);
-}
 
-bool GLLogCall(const char* function, const char* file, int line)
-{
-	while (GLenum error = glGetError()) {
-		std::cout << "[OpenGL Error] )" << error << "):" << function << ":" << file << ":" << line << std::endl;
-		return false;
+	void Renderer::draw(const VertexArray &va, const IndexBuffer &ib, const VertexBuffer &vb, const Shader &shader)
+	{
+
+		va.bind();
+		ib.bind();
+		vb.bind();
+		shader.bind();
+
+		/* Render here */
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	}
-	return true;
+
+
 }
+

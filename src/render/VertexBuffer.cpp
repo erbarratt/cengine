@@ -1,7 +1,6 @@
-#pragma once
-
 #include "VertexBuffer.hpp"
-#include "Renderer.hpp"
+
+#include "GLEW/glew.h"
 
 VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 {
@@ -24,14 +23,14 @@ VertexBuffer::~VertexBuffer()
 	glDeleteBuffers(1, &m_RendererID);
 }
 
-void VertexBuffer::Bind() const
+void VertexBuffer::bind() const
 {
 	//tell opengl we are now using the specified buffer object (by passing the id previously generated)
 	//IN the "target" type we specify, GL_ARRAY_BUFFER = Vertex Attributes
 	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 }
 
-void VertexBuffer::Unbind() const
+void VertexBuffer::unbind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

@@ -1,4 +1,4 @@
-#include "shaders.hpp"
+#include "Shader.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -21,7 +21,7 @@ namespace MarMyte {
 	 * @param filepath path to combined shader program source file
 	 * @return ShaderProgramSource
 	 */
-	ShaderProgramSource Shaders::parseShader(const char* filepath)
+	ShaderProgramSource Shader::parseShader(const char* filepath)
 	{
 
 		std::ifstream stream(filepath);
@@ -51,7 +51,7 @@ namespace MarMyte {
 	 * @param source The source for that shader type
 	 * @return unsigned int
 	 */
-	unsigned int Shaders::compileShader(const unsigned int type, const std::string &source)
+	unsigned int Shader::compileShader(const unsigned int type, const std::string &source)
 	{
 
 		//generate an empty shader object and get it's id
@@ -84,32 +84,36 @@ namespace MarMyte {
 	 * @param filepath path to combined shader program source file
 	 * @return unsigned int
 	 */
-	unsigned int Shaders::createShaderProgram(const char* filepath)
+	Shader::Shader(const char* filepath)
 	{
 
 		//convert file to src strings in a struct
 		ShaderProgramSource src = parseShader(filepath);
 
 		//create an id ref to an empty shaeder program object
-		const unsigned int program = glCreateProgram();
+		const unsigned int prog = glCreateProgram();
 
 		//compile the shader src and return an id to that compiled shader
 		const unsigned int vs = compileShader(GL_VERTEX_SHADER, src.vertexSource);
 		const unsigned int fs = compileShader(GL_FRAGMENT_SHADER, src.fragmentSource);
 
 		//attach the compiled shader to the empty program
-		glAttachShader(program, vs);
-		glAttachShader(program, fs);
+		glAttachShader(prog, vs);
+		glAttachShader(prog, fs);
 
 		//link and validate the shader program
-		glLinkProgram(program);
-		glValidateProgram(program);
+		glLinkProgram(prog);
+		glValidateProgram(prog);
 
 		//now the shaders are in the program and the program is linked, cleanup the shaders.
 		glDeleteShader(vs);
 		glDeleteShader(fs);
 
-		return program;
+		program = prog;
 	}
 
+	void Shader::bind() const
+	{
+		glUseProgram(program);
+	}
 } // MarMyte

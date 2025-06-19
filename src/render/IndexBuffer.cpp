@@ -1,5 +1,6 @@
 #include "IndexBuffer.hpp"
-#include "Renderer.hpp"
+
+#include "GLEW/glew.h"
 
 IndexBuffer::IndexBuffer(const void* data, unsigned int count)
 	: m_IndexCount(count)
@@ -23,14 +24,14 @@ IndexBuffer::~IndexBuffer()
 	glDeleteBuffers(1, &m_RendererID);
 }
 
-void IndexBuffer::Bind() const
+void IndexBuffer::bind() const
 {
 	//tell opengl we are now using the specified buffer object (by passing the id previously generated)
 	//IN the "target" type we specify, GL_ARRAY_BUFFER = Vertex Attributes
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 }
 
-void IndexBuffer::Unbind() const
+void IndexBuffer::unbind() const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

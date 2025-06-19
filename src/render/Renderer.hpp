@@ -2,10 +2,22 @@
 
 #include <GLEW/glew.h>
 
-#define ASSERT(x) if(!(x)) __debugbreak();
-#define CGL(x) GLClearError();\
-x;\
-ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+#include "IndexBuffer.hpp"
+#include "VertexArray.hpp"
+#include "VertexBuffer.hpp"
+#include "Shader.hpp"
 
-void GLClearError();
-bool GLLogCall(const char* function, const char* file, int line);
+#ifndef RENDERER_HPP
+#define RENDERER_HPP
+
+namespace MarMyte
+{
+class Renderer
+{
+	public:
+		void draw(const VertexArray& va, const IndexBuffer& ib, const VertexBuffer& vb, const Shader& shader);
+	private:
+};
+}
+
+#endif //RENDERER_HPP

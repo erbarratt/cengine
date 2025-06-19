@@ -1,5 +1,5 @@
-#ifndef RENDERER_HPP
-#define RENDERER_HPP
+#ifndef SHADER_HPP
+#define SHADER_HPP
 #include <string>
 
 struct ShaderProgramSource
@@ -10,15 +10,17 @@ struct ShaderProgramSource
 
 namespace MarMyte {
 
-class Shaders {
+class Shader {
 
 public:
-	static unsigned int createShaderProgram(const char* filepath);
+	explicit Shader(const char* filepath);
+	void bind() const;
 private:
+	unsigned int program = 0;
 	static ShaderProgramSource parseShader(const char* filepath);
 	static unsigned int compileShader(unsigned int type, const std::string& source);
 };
 
 } // MarMyte
 
-#endif //RENDERER_HPP
+#endif //SHADER_HPP
