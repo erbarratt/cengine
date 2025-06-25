@@ -4,20 +4,22 @@
 
 #ifndef VERTEXARRAY_HPP
 #define VERTEXARRAY_HPP
+#include "VertexBuffer.hpp"
+#include "VertexBufferLayout.hpp"
 
-
-
-class VertexArray {
+namespace MarMyte
+{
+	class VertexArray {
 	private:
-		unsigned int m_RendererID = 0;
+		unsigned int VAO_id = 0;
 		unsigned int currentIndex = 0;
 	public:
 		VertexArray();
+		~VertexArray();
 		void bind() const;
-		void unbind() const;
-		void addVertexAttribPointer(int size, int type, int stride, const void *offset);
-};
-
-
+		static void unbind() ;
+		void addBuffer(const VertexBuffer &vertexBuffer, const MarMyte::VertexBufferLayout &layout);
+	};
+}
 
 #endif //VERTEXARRAY_HPP

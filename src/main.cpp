@@ -8,8 +8,8 @@
 #include "render/Renderer.hpp"
 #include "render/VertexBuffer.hpp"
 #include "render/IndexBuffer.hpp"
+#include "render/Texture.hpp"
 #include "render/VertexArray.hpp"
-
 
 int main()
 {
@@ -22,7 +22,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	GLFWwindow *window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(800, 800, "Hello World", nullptr, nullptr);
 	if (!window){ glfwTerminate(); return -1; }
 
 	/* Make the window's context current */
@@ -31,15 +31,16 @@ int main()
 
 	if (glewInit() != GLEW_OK) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
+		return -1;
 	}
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	const float positions[] = {
-		-0.5f, -0.5f,
-		0.5f, -0.5f,
-		0.5f, 0.5f,
-		-0.5f, 0.5f
+		-0.5f, -0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f, 1.0f
 	};
 
 	const unsigned int indices[] = {
@@ -47,20 +48,33 @@ int main()
 		2,3,0
 	};
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	//vertex array object
-		VertexArray vao;
+		MarMyte::VertexArray vao;
 
 	//vertex buffer object - the actual data of the vertex points
-		VertexBuffer vbo(positions, sizeof(positions));
+		MarMyte::VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
 
-	//with a VAO and VBO now present and bound, add definitions of the layout in the VA
-		vao.addVertexAttribPointer(2, GL_FLOAT, 2 * sizeof(float), (void*)0);
+	//vert buffer layout
+		MarMyte::VertexBufferLayout vbl;
+		vbl.Push(GL_FLOAT, 2, false);
+		vbl.Push(GL_FLOAT, 2, false);
+
+	//add buffer and layout to array object
+		vao.addBuffer(vbo, vbl);
 
 	//index buffer object
-		IndexBuffer ibo(indices, 6);
+		MarMyte::IndexBuffer ibo(indices, 6);
 
 	//for the next draw call, use the shader program defined in this file...
 		MarMyte::Shader shader("../../res/shaders/basic.shader");
+
+		MarMyte::Texture texture("../../res/textures/checker-map_tho.png");
+		texture.bind();
+
+		shader.setUniformi("u_texture", 0);
 
 	MarMyte::Renderer renderer;
 

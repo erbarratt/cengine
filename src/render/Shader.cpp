@@ -79,6 +79,26 @@ namespace MarMyte {
 		return id;
 	}
 
+	void Shader::setUniformi(const std::string &name, int value)
+	{
+		glUniform1i(GetUniformLocation(name), value);
+	}
+
+	int Shader::GetUniformLocation(const std::string &name)
+	{
+		if (uniformLocationCache.find(name) != uniformLocationCache.end()) {
+			return uniformLocationCache[name];
+		}
+
+		int location = glGetUniformLocation(program, name.c_str());
+		if (location == -1) {
+			std::cout << "Failed to get uniform location " << name << std::endl;
+		}
+
+		uniformLocationCache[name] = location;
+		return location;
+	}
+
 	/**
 	 * Create a shader program from a combined shader source file
 	 * @param filepath path to combined shader program source file

@@ -22,6 +22,10 @@ add_executable(GameEngine
         src/render/IndexBuffer.cpp
         src/render/GLDebug.h
         src/render/VertexArray.cpp
+        src/render/VertexBufferLayout.cpp
+        src/render/stb_image.cpp
+        src/render/Texture.cpp
+        src/render/Texture.hpp
         # add other modules here
 )
 

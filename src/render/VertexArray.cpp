@@ -4,41 +4,57 @@
 
 #include "VertexArray.hpp"
 
+#include "VertexBuffer.hpp"
+#include "VertexBufferLayout.hpp"
 #include "GLEW/glew.h"
 
-VertexArray::VertexArray()
+namespace MarMyte
 {
-	//generate n buffer "names" or "ids" stored as integers into the mem location provided
-	glGenVertexArrays(1, &m_RendererID);
+	VertexArray::VertexArray()
+	{
+		//generate n buffer "names" or "ids" stored as integers into the mem location provided
+		glGenVertexArrays(1, &VAO_id);
 
-	//tell opengl we are now using the specified ARRAY object (by passing the id previously generated)
-	glBindVertexArray(m_RendererID);
-}
+		//tell opengl we are now using the specified ARRAY object (by passing the id previously generated)
+		glBindVertexArray(VAO_id);
+	}
 
-void VertexArray::bind() const
-{
-	//tell opengl we are now using the specified ARRAY object (by passing the id previously generated)
-	glBindVertexArray(m_RendererID);
-}
+	VertexArray::~VertexArray()
+	{
+		glDeleteVertexArrays(1, &VAO_id);
+	}
 
-void VertexArray::unbind() const
-{
-	glBindVertexArray(0);
-}
+	void VertexArray::bind() const
+	{
+		//tell opengl we are now using the specified ARRAY object (by passing the id previously generated)
+		glBindVertexArray(VAO_id);
+	}
 
-void VertexArray::addVertexAttribPointer(int size, int type, int stride, const void* offset)
-{
-	//enable a vertex attribute by index ++OF THE VERTEXX ARRAY OBJECT++, for defining below...
-	glEnableVertexAttribArray(currentIndex);
+	void VertexArray::unbind()
+	{
+		glBindVertexArray(0);
+	}
 
-	//define the structure of our vertex attributes - in this case just a vec2 list of x,y coords.
-	//this vertex attributes has an index or "id" of 0 ++OF THE VERTEXX ARRAY OBJECT++
-	//is comprised of "size" 2 things of "type" float
-	//we have already normalised the data
-	//to get to the same attrib of the next vertex, we need to move along "stride" bytes.
-	//to get to this attribute in the first vertex, how many bytes (as a void*) do we need to move along the data?
-	glVertexAttribPointer(currentIndex, size, type, GL_FALSE, stride, offset);
+	void VertexArray::addBuffer(const VertexBuffer& vertexBuffer, const MarMyte::VertexBufferLayout& layout)
+	{
+		vertexBuffer.bind();
+		const auto& elements = layout.getElements();
+		unsigned int offset = 0;
+		for (const auto& element : elements) {
+			//enable a vertex attribute by index ++OF THE VERTEXX ARRAY OBJECT++, for defining below...
+			glEnableVertexAttribArray(currentIndex);
 
-	currentIndex++;
+			//define the structure of our vertex attributes - in this case just a vec2 list of x,y coords.
+			//this vertex attributes has an index or "id" of 0 ++OF THE VERTEXX ARRAY OBJECT++
+			//is comprised of "size" 2 things of "type" float
+			//we have already normalised the data
+			//to get to the same attrib of the next vertex, we need to move along "stride" bytes.
+			//to get to this attribute in the first vertex, how many bytes (as a void*) do we need to move along the data?
+			glVertexAttribPointer(currentIndex, element.count, element.type, element.normalized, layout.getStride(), (const void*)offset);
 
+			offset += element.count * MarMyte::VertexBufferLayout::getSizeOfType(element.type);
+
+			currentIndex++;
+		}
+	}
 }
