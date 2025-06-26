@@ -387,6 +387,6 @@ namespace detail
 #endif
 
 #if GLM_CONFIG_SIMD == GLM_ENABLE
-#include "func_integer_simd.inl"
+#	include "func_integer_simd.inl"
 #endif
 

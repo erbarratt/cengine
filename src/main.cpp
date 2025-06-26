@@ -12,7 +12,6 @@
 #include "render/VertexArray.hpp"
 
 #include <GLM/glm.hpp>
-#include <GLM/gtc/matrix.hpp>
 
 #include "GLM/ext/matrix_clip_space.hpp"
 

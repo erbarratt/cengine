@@ -15,7 +15,7 @@
 #include "../detail/setup.hpp"
 #include "../detail/qualifier.hpp"
 #include "../detail/_vectorize.hpp"
-#include "../GLM/vector_relational.hpp"
+#include "../vector_relational.hpp"
 #include "../common.hpp"
 #include <limits>
 
