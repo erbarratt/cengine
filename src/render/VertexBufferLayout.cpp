@@ -5,22 +5,21 @@
 #include "VertexBufferLayout.hpp"
 
 namespace MarMyte {
-	unsigned int VertexBufferLayout::getSizeOfType(unsigned int type)
+	int VertexBufferLayout::getSizeOfType(int type)
 	{
 		switch (type) {
 			case GL_FLOAT:
 			case GL_UNSIGNED_INT:
 				return 4;
 			case GL_UNSIGNED_BYTE:
-				return 1;
 			default:
 				return 1;
 		}
 	}
 
-	void VertexBufferLayout::Push(const unsigned int type, const unsigned int count, const bool normalised)
+	void VertexBufferLayout::Push(const int type, const int count, const bool normalised)
 	{
 		elements.push_back({ type, count, normalised });
-		stride += count * VertexBufferLayout::getSizeOfType(type);
+		stride += count * getSizeOfType(type);
 	}
 } // MarMyte

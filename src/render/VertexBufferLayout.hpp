@@ -11,8 +11,8 @@ namespace MarMyte {
 
 struct VertexBufferElement
 {
-	unsigned int type;
-	unsigned int count;
+	int type;
+	int count;
 	bool normalized;
 };
 
@@ -20,18 +20,18 @@ class VertexBufferLayout {
 
 private:
 	std::vector<VertexBufferElement> elements;
-	unsigned int stride;
+	int stride;
 
 public:
 	VertexBufferLayout()
 		:stride(0) {}
 
-	static unsigned int getSizeOfType(unsigned int type);
+	static int getSizeOfType(int type);
 
-	void Push(unsigned int type, unsigned int count, bool normalised);
+	void Push(int type, int count, bool normalised);
 
-	inline const std::vector<VertexBufferElement>& getElements() const { return elements; }
-	inline const unsigned int& getStride() const { return stride; }
+	[[nodiscard]] inline const std::vector<VertexBufferElement>& getElements() const { return elements; }
+	[[nodiscard]] inline const int& getStride() const { return stride; }
 
 };
 

@@ -11,6 +11,11 @@
 #include "render/Texture.hpp"
 #include "render/VertexArray.hpp"
 
+#include <GLM/glm.hpp>
+#include <GLM/gtc/matrix.hpp>
+
+#include "GLM/ext/matrix_clip_space.hpp"
+
 int main()
 {
 	//Initialize GLFW
@@ -22,7 +27,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	GLFWwindow *window = glfwCreateWindow(800, 800, "Hello World", nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
 	if (!window){ glfwTerminate(); return -1; }
 
 	/* Make the window's context current */
@@ -68,6 +73,9 @@ int main()
 	//index buffer object
 		MarMyte::IndexBuffer ibo(indices, 6);
 
+	//projection matrix
+		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
 	//for the next draw call, use the shader program defined in this file...
 		MarMyte::Shader shader("../../res/shaders/basic.shader");
 
@@ -85,7 +93,6 @@ int main()
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
-
 		// Measure time and update FPS counter
 		currentTime = glfwGetTime();
 		frameCount++;

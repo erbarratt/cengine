@@ -9,6 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #literally add directories to look for headers when using <> in includes
 include_directories(${CMAKE_SOURCE_DIR}/external/GLFW/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/GLEW/include)
+include_directories(${CMAKE_SOURCE_DIR}/external/GLM)
 
 #where to look for the library files that we link below...
 link_directories(${CMAKE_SOURCE_DIR}/external/GLFW/lib-mingw-w64)
@@ -25,7 +26,6 @@ add_executable(GameEngine
         src/render/VertexBufferLayout.cpp
         src/render/stb_image.cpp
         src/render/Texture.cpp
-        src/render/Texture.hpp
         # add other modules here
 )
 

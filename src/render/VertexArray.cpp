@@ -1,7 +1,3 @@
-//
-// Created by ellio on 19/06/2025.
-//
-
 #include "VertexArray.hpp"
 
 #include "VertexBuffer.hpp"
@@ -35,11 +31,11 @@ namespace MarMyte
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::addBuffer(const VertexBuffer& vertexBuffer, const MarMyte::VertexBufferLayout& layout)
+	void VertexArray::addBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& layout)
 	{
 		vertexBuffer.bind();
 		const auto& elements = layout.getElements();
-		unsigned int offset = 0;
+		int offset = 0;
 		for (const auto& element : elements) {
 			//enable a vertex attribute by index ++OF THE VERTEXX ARRAY OBJECT++, for defining below...
 			glEnableVertexAttribArray(currentIndex);
@@ -52,7 +48,7 @@ namespace MarMyte
 			//to get to this attribute in the first vertex, how many bytes (as a void*) do we need to move along the data?
 			glVertexAttribPointer(currentIndex, element.count, element.type, element.normalized, layout.getStride(), (const void*)offset);
 
-			offset += element.count * MarMyte::VertexBufferLayout::getSizeOfType(element.type);
+			offset += element.count * VertexBufferLayout::getSizeOfType(element.type);
 
 			currentIndex++;
 		}
