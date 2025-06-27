@@ -14,9 +14,6 @@
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
-#include "game/Thing.hpp"
-#include "game/components/Mesh.hpp"
-
 int main()
 {
 	//Initialize GLFW
@@ -90,9 +87,6 @@ int main()
 		shader.setUniformMat4f("u_MVP", proj * view * model);
 
 	MarMyte::Renderer renderer;
-
-	MarMyte::Thing thing({0,0,0}, {0,0,0}, {1,1,1});
-	thing.addComponent(MarMyte::Mesh(true));
 
 	int frameCount = 0;
 	double lastTime = glfwGetTime();
