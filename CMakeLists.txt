@@ -26,6 +26,15 @@ add_executable(GameEngine
         src/render/VertexBufferLayout.cpp
         src/render/stb_image.cpp
         src/render/Texture.cpp
+        src/game/Thing.cpp
+        src/game/Component.cpp
+        src/game/Component.hpp
+        src/game/components/Mesh.cpp
+        src/game/components/Mesh.hpp
+        src/game/components/RigidBody.cpp
+        src/game/components/RigidBody.hpp
+        src/game/components/test.cpp
+        src/game/components/test.hpp
         # add other modules here
 )
 
