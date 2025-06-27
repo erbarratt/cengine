@@ -12,8 +12,7 @@
 #include "render/VertexArray.hpp"
 
 #include <GLM/glm.hpp>
-
-#include "GLM/ext/matrix_clip_space.hpp"
+#include <GLM/gtc/matrix_transform.hpp>
 
 int main()
 {
@@ -41,10 +40,10 @@ int main()
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	const float positions[] = {
-		-0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f, 1.0f
+		-50.0f, 50.0f, 0.0f, 0.0f,
+		50.0f, 50.0f, 1.0f, 0.0f,
+		50.0f, -50.0f, 1.0f, 1.0f,
+		-50.0f, -50.0f, 0.0f, 1.0f
 	};
 
 	const unsigned int indices[] = {
@@ -72,16 +71,20 @@ int main()
 	//index buffer object
 		MarMyte::IndexBuffer ibo(indices, 6);
 
-	//projection matrix
-		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
-
 	//for the next draw call, use the shader program defined in this file...
-		MarMyte::Shader shader("../../res/shaders/basic.shader");
+		MarMyte::Shader shader("basic");
+		shader.bind();
 
 		MarMyte::Texture texture("../../res/textures/checker-map_tho.png");
 		texture.bind();
 
+	//projection matrixes
+		glm::mat4 proj = glm::ortho(-(640.0f / 2.0f), (640.0f / 2.0f), -(480.0f / 2.0f), (480.0f / 2.0f), -1.0f, 1.0f);
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0.0f, 0.0f));
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
 		shader.setUniformi("u_texture", 0);
+		shader.setUniformMat4f("u_MVP", proj * view * model);
 
 	MarMyte::Renderer renderer;
 
@@ -96,7 +99,7 @@ int main()
 		currentTime = glfwGetTime();
 		frameCount++;
 
-		if (currentTime - lastTime >= 1.0) { // 1 second has passed
+		if (currentTime - lastTime >= 1) { // 1 second has passed
 			std::ostringstream title;
 			title << "OpenGL Window - FPS: " << frameCount;
 			glfwSetWindowTitle(window, title.str().c_str());
