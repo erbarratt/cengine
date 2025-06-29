@@ -4,26 +4,31 @@ namespace MarMyte
 {
 	EntityManager::EntityManager()
 	{
-		// Initialize the queue with all possible entity IDs
-		for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
+		// Initialize the queue with all possible unsigned int IDs
+		//for example 0 to 4999...
+		for (unsigned int entity = 0; entity < MAX_ENTITIES; ++entity)
 		{
 			mAvailableEntities.push(entity);
 		}
 	}
 
-	Entity EntityManager::CreateEntity()
+	unsigned int EntityManager::CreateEntity()
 	{
 		assert(mLivingEntityCount < MAX_ENTITIES && "Too many entities in existence.");
 
 		// Take an ID from the front of the queue
-		const Entity id = mAvailableEntities.front();
+		const unsigned int id = mAvailableEntities.front();
+
+		//remove that id from the pool of available ids
 		mAvailableEntities.pop();
+
+		//increase count of living
 		++mLivingEntityCount;
 
 		return id;
 	}
 
-	void EntityManager::DestroyEntity(Entity entity)
+	void EntityManager::DestroyEntity(const unsigned int entity)
 	{
 		assert(entity < MAX_ENTITIES && "Entity out of range.");
 
@@ -35,7 +40,7 @@ namespace MarMyte
 		--mLivingEntityCount;
 	}
 
-	void EntityManager::SetSignature(Entity entity, Signature signature)
+	void EntityManager::SetSignature(const unsigned int entity, const Signature signature)
 	{
 		assert(entity < MAX_ENTITIES && "Entity out of range.");
 
@@ -43,7 +48,7 @@ namespace MarMyte
 		mSignatures[entity] = signature;
 	}
 
-	Signature EntityManager::GetSignature(const Entity entity)
+	Signature EntityManager::GetSignature(const unsigned int entity) const
 	{
 		assert(entity < MAX_ENTITIES && "Entity out of range.");
 

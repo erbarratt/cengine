@@ -10,19 +10,19 @@ namespace MarMyte
 	{
 	public:
 		EntityManager();
-		Entity CreateEntity();
-		void DestroyEntity(Entity entity);
-		void SetSignature(Entity entity, Signature signature);
-		Signature GetSignature(Entity entity);
+		unsigned int CreateEntity();
+		void DestroyEntity(unsigned int entity);
+		void SetSignature(unsigned int entity, Signature signature);
+		[[nodiscard]] Signature GetSignature(unsigned int entity) const;
 
 	private:
-		// Queue of unused entity IDs
-		std::queue<Entity> mAvailableEntities{};
+		// Queue of UNUSED unsigned int IDs
+		std::queue<unsigned int> mAvailableEntities{};
 
-		// Array of signatures where the index corresponds to the entity ID
+		// Array of signatures where the index corresponds to the unsigned int ID
 		std::array<Signature, MAX_ENTITIES> mSignatures{};
 
 		// Total living entities - used to keep limits on how many exist
-		uint32_t mLivingEntityCount{};
+		unsigned int mLivingEntityCount{};
 	};
 }

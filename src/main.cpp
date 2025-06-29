@@ -25,7 +25,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	GLFWwindow *window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(800, 600, "Hello World", nullptr, nullptr);
 	if (!window){ glfwTerminate(); return -1; }
 
 	/* Make the window's context current */
@@ -79,12 +79,27 @@ int main()
 		texture.bind();
 
 	//projection matrixes
+
+		//how the camera sees
 		glm::mat4 proj = glm::ortho(-(640.0f / 2.0f), (640.0f / 2.0f), -(480.0f / 2.0f), (480.0f / 2.0f), -1.0f, 1.0f);
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0.0f, 0.0f));
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		// Define parameters for the perspective projection
+		float fov = 65.0f; // Field of view angle in degrees
+		float aspectRatio = 4.0f / 3.0f; // Width divided by height
+		float nearPlane = 0.1f; // Distance to the near clipping plane
+		float farPlane = 1000.0f; // Distance to the far clipping plane
+
+		proj = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+
+		//where the camera is
+		glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 camRot = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::mat4 view;
+
+		//where the entity is
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 
 		shader.setUniformi("u_texture", 0);
-		shader.setUniformMat4f("u_MVP", proj * view * model);
 
 	MarMyte::Renderer renderer;
 
@@ -107,6 +122,39 @@ int main()
 			frameCount = 0;
 			lastTime = currentTime;
 		}
+
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			camPos.y --;
+		} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			camPos.y ++;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			camPos.x ++;
+		} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			camPos.x --;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			camRot.y --;
+		} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			camRot.y ++;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			camPos.z ++;
+		} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			camPos.z --;
+		}
+
+
+		view = glm::translate(glm::mat4(1.0f), camPos);
+
+		glm::vec3 localY = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 worldY = glm::vec3(view * glm::vec4(localY, 0.0f));
+		glm::mat4 rotation = glm::rotate(view, glm::radians(camRot.y), worldY);
+		view = rotation * view;
+		shader.setUniformMat4f("u_MVP", proj * view * model);
 
 		renderer.draw(vao, ibo, vbo, shader);
 
