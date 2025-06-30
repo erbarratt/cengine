@@ -1,28 +1,58 @@
 #pragma once
+
+#include "Types.hpp"
 #include <array>
+#include <cassert>
 #include <queue>
 
-#include "ecs.h"
 
-namespace MarMyte
+class EntityManager
 {
-	class EntityManager
+public:
+	EntityManager()
 	{
-	public:
-		EntityManager();
-		unsigned int CreateEntity();
-		void DestroyEntity(unsigned int entity);
-		void SetSignature(unsigned int entity, Signature signature);
-		[[nodiscard]] Signature GetSignature(unsigned int entity) const;
+		for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
+		{
+			mAvailableEntities.push(entity);
+		}
+	}
 
-	private:
-		// Queue of UNUSED unsigned int IDs
-		std::queue<unsigned int> mAvailableEntities{};
+	Entity CreateEntity()
+	{
+		assert(mLivingEntityCount < MAX_ENTITIES && "Too many entities in existence.");
 
-		// Array of signatures where the index corresponds to the unsigned int ID
-		std::array<Signature, MAX_ENTITIES> mSignatures{};
+		Entity id = mAvailableEntities.front();
+		mAvailableEntities.pop();
+		++mLivingEntityCount;
 
-		// Total living entities - used to keep limits on how many exist
-		unsigned int mLivingEntityCount{};
-	};
-}
+		return id;
+	}
+
+	void DestroyEntity(Entity entity)
+	{
+		assert(entity < MAX_ENTITIES && "Entity out of range.");
+
+		mSignatures[entity].reset();
+		mAvailableEntities.push(entity);
+		--mLivingEntityCount;
+	}
+
+	void SetSignature(Entity entity, Signature signature)
+	{
+		assert(entity < MAX_ENTITIES && "Entity out of range.");
+
+		mSignatures[entity] = signature;
+	}
+
+	Signature GetSignature(Entity entity)
+	{
+		assert(entity < MAX_ENTITIES && "Entity out of range.");
+
+		return mSignatures[entity];
+	}
+
+private:
+	std::queue<Entity> mAvailableEntities{};
+	std::array<Signature, MAX_ENTITIES> mSignatures{};
+	uint32_t mLivingEntityCount{};
+};

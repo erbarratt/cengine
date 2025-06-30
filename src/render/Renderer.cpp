@@ -2,6 +2,11 @@
 
 namespace MarMyte
 {
+	Renderer::Renderer()
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
 
 	void Renderer::draw(const VertexArray &va, const IndexBuffer &ib, const VertexBuffer &vb, const Shader &shader)
 	{

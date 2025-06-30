@@ -26,8 +26,6 @@ add_executable(GameEngine
         src/render/VertexBufferLayout.cpp
         src/render/stb_image.cpp
         src/render/Texture.cpp
-        src/core/ecs.h
-        src/core/EntityManager.cpp
         # add other modules here
 )
 

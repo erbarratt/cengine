@@ -15,6 +15,7 @@ namespace MarMyte
 class Renderer
 {
 	public:
+		Renderer();
 		void draw(const VertexArray& va, const IndexBuffer& ib, const VertexBuffer& vb, const Shader& shader);
 	private:
 };
