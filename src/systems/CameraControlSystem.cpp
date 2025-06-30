@@ -6,7 +6,6 @@
 
 extern Coordinator gCoordinator;
 
-
 void CameraControlSystem::Init()
 {
 	gCoordinator.AddEventListener(METHOD_LISTENER(Events::Window::INPUT, CameraControlSystem::InputListener));

@@ -2,7 +2,7 @@
 
 #include "GLEW/glew.h"
 
-namespace MarMyte
+namespace MM
 {
 	VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 	{

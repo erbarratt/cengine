@@ -9,7 +9,7 @@
 #include "GLEW/glew.h"
 #include "GLM/glm.hpp"
 
-namespace MarMyte {
+namespace MM {
 
 	enum class ShaderType
 	{

@@ -4,7 +4,7 @@
 #include "VertexBufferLayout.hpp"
 #include "GLEW/glew.h"
 
-namespace MarMyte
+namespace MM
 {
 	VertexArray::VertexArray()
 	{

@@ -1,7 +1,7 @@
 #ifndef VERTEXBUFFER_HPP
 #define VERTEXBUFFER_HPP
 
-namespace MarMyte
+namespace MM
 {
 	class VertexBuffer {
 	private:

@@ -2,7 +2,7 @@
 
 #include "GLEW/glew.h"
 
-namespace MarMyte
+namespace MM
 {
 	IndexBuffer::IndexBuffer(const void* data, unsigned int count)
 		: m_IndexCount(count)

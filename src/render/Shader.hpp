@@ -11,7 +11,7 @@ struct ShaderProgramSource
 	std::string fragmentSource;
 };
 
-namespace MarMyte {
+namespace MM {
 
 	class Shader {
 

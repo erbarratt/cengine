@@ -7,7 +7,7 @@
 #include <vector>
 #include <GLEW/glew.h>
 
-namespace MarMyte {
+namespace MM {
 
 struct VertexBufferElement
 {

@@ -26,6 +26,7 @@ add_executable(GameEngine
         src/render/VertexBufferLayout.cpp
         src/render/stb_image.cpp
         src/render/Texture.cpp
+        src/systems/CameraSystem.cpp
         # add other modules here
 )
 

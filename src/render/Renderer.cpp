@@ -1,6 +1,6 @@
 #include "Renderer.hpp"
 
-namespace MarMyte
+namespace MM
 {
 	Renderer::Renderer()
 	{

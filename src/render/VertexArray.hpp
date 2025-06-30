@@ -7,7 +7,7 @@
 #include "VertexBuffer.hpp"
 #include "VertexBufferLayout.hpp"
 
-namespace MarMyte
+namespace MM
 {
 	class VertexArray {
 	private:
@@ -18,7 +18,7 @@ namespace MarMyte
 		~VertexArray();
 		void bind() const;
 		static void unbind() ;
-		void addBuffer(const VertexBuffer &vertexBuffer, const MarMyte::VertexBufferLayout &layout);
+		void addBuffer(const VertexBuffer &vertexBuffer, const MM::VertexBufferLayout &layout);
 	};
 }
 

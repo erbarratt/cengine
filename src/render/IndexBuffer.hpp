@@ -1,7 +1,7 @@
 #ifndef INDEXBUFFER_HPP
 #define INDEXBUFFER_HPP
 
-namespace MarMyte
+namespace MM
 {
 	class IndexBuffer {
 	private:

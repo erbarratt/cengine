@@ -4,7 +4,7 @@
 
 #include "VertexBufferLayout.hpp"
 
-namespace MarMyte {
+namespace MM {
 	int VertexBufferLayout::getSizeOfType(int type)
 	{
 		switch (type) {

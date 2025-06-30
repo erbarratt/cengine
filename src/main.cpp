@@ -6,6 +6,8 @@
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
+#include "components/Camera.hpp"
+#include "components/Transform.hpp"
 #include "render/Shader.hpp"
 #include "render/Renderer.hpp"
 #include "render/VertexBuffer.hpp"
@@ -14,11 +16,13 @@
 #include "render/VertexArray.hpp"
 
 #include "core/Coordinator.hpp"
+#include "systems/CameraSystem.hpp"
 
 Coordinator gCoordinator;
 
 int main()
 {
+
 	//Initialize GLFW
 	if (!glfwInit())
 		return -1;
@@ -55,13 +59,13 @@ int main()
 	};
 
 	//vertex array object
-		MarMyte::VertexArray vao;
+		MM::VertexArray vao;
 
 	//vertex buffer object - the actual data of the vertex points
-		MarMyte::VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
+		MM::VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
 
 	//vert buffer layout
-		MarMyte::VertexBufferLayout vbl;
+		MM::VertexBufferLayout vbl;
 		vbl.Push(GL_FLOAT, 2, false);
 		vbl.Push(GL_FLOAT, 2, false);
 
@@ -69,25 +73,42 @@ int main()
 		vao.addBuffer(vbo, vbl);
 
 	//index buffer object
-		MarMyte::IndexBuffer ibo(indices, 6);
+		MM::IndexBuffer ibo(indices, 6);
 
 	//for the next draw call, use the shader program defined in this file...
-		MarMyte::Shader shader("basic");
+		MM::Shader shader("basic");
 		shader.bind();
 
-		MarMyte::Texture texture("../../res/textures/checker-map_tho.png");
+		MM::Texture texture("../../res/textures/checker-map_tho.png");
 		texture.bind();
 
 	//projection matrixes
 
-		//how the camera sees
-		// Define parameters for the perspective projection
-		float fov = 65.0f;						// Field of view angle in degrees
-		float aspectRatio = 4.0f / 3.0f;		// Width divided by height
-		float nearPlane = 0.1f;					// Distance to the near clipping plane
-		float farPlane = 1000.0f;				// Distance to the far clipping plane
+		gCoordinator.Init();
 
-		glm::mat4 proj = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+		gCoordinator.RegisterComponent<Camera>();
+		auto cameraSystem = gCoordinator.RegisterSystem<MM::CameraSystem>();
+
+		Signature signature;
+		signature.set(gCoordinator.GetComponentType<Camera>());
+		gCoordinator.SetSystemSignature<MM::CameraSystem>(signature);
+
+		Entity camera = gCoordinator.CreateEntity();
+		gCoordinator.AddComponent<Camera>(camera, Camera{
+			65.0f,
+			4.0f / 3.0f,
+			0.1f,
+			1000.0f
+		});
+
+		gCoordinator.AddComponent<Transform>(camera, Transform{
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(1.0f, 1.0f, 1.0f),
+		});
+
+		cameraSystem->SetCamera(camera);
+		glm::mat4 proj = cameraSystem->GetProjectionMatrix();
 
 		//where the camera is
 		glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -99,7 +120,7 @@ int main()
 
 		shader.setUniformi("u_texture", 0);
 
-	MarMyte::Renderer renderer;
+	MM::Renderer renderer;
 
 	int frameCount = 0;
 	double lastTime = glfwGetTime();

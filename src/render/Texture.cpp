@@ -1,7 +1,7 @@
 #include "Texture.hpp"
 #include "stb_image.hpp"
 
-namespace MarMyte
+namespace MM
 {
 	Texture::Texture(const std::string& path)
 		:textureId(0), filepath(path), localBBuffer(nullptr), width(0), height(0), BPP(0)

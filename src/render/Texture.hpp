@@ -5,7 +5,7 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
-namespace MarMyte
+namespace MM
 {
 	class Texture {
 	private:
