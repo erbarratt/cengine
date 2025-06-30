@@ -27,6 +27,9 @@ add_executable(GameEngine
         src/render/stb_image.cpp
         src/render/Texture.cpp
         src/systems/CameraSystem.cpp
+        src/core/Window.cpp
+        src/systems/InputSystem.cpp
+        src/systems/InputSystem.hpp
         # add other modules here
 )
 

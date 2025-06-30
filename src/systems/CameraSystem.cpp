@@ -3,8 +3,11 @@
 #include "../core/Coordinator.hpp"
 #include "../components/Camera.hpp"
 #include "../components/Transform.hpp"
+#include "../components/Input.hpp"
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
+
+#include "GLFW/glfw3.h"
 
 extern Coordinator gCoordinator;
 
@@ -13,16 +16,42 @@ namespace MM {
 	void CameraSystem::SetCamera(const Entity camera)
 	{
 		mCurrentCamera = camera;
+		mProjectionMatrix = GenerateProjectionMatrix();
 	}
 
-	// void CameraSystem::MoveCamera() const
-	// {
-	// 	//process inputs
-	// 	auto& transform = gCoordinator.GetComponent<Transform>(mCurrentCamera);
-	// 	transform.position.x += 1.0f;
-	// }
+	void CameraSystem::MoveCamera() const
+	{
+		//process inputs
+		auto& input = gCoordinator.GetComponent<Input>(mCurrentCamera);
+		auto& transform = gCoordinator.GetComponent<Transform>(mCurrentCamera);
 
-	glm::mat4 CameraSystem::GetProjectionMatrix()
+		if (input.up) {
+			transform.position.y --;
+		} else if (input.down) {
+			transform.position.y ++;
+		}
+
+		if (input.a) {
+			transform.position.x ++;
+		} else if (input.d) {
+			transform.position.x --;
+		}
+
+		if (input.w) {
+			transform.position.z ++;
+		} else if (input.s) {
+			transform.position.z --;
+		}
+
+		if (input.left) {
+			transform.rotation.y --;
+		} else if (input.right) {
+			transform.rotation.y ++;
+		}
+
+	}
+
+	glm::mat4 CameraSystem::GenerateProjectionMatrix() const
 	{
 		auto& cameraSettings = gCoordinator.GetComponent<Camera>(mCurrentCamera);
 		return glm::perspective(glm::radians(cameraSettings.fov), cameraSettings.aspectRatio, cameraSettings.nearPlane, cameraSettings.farPlane);
@@ -31,16 +60,21 @@ namespace MM {
 	glm::mat4 CameraSystem::GetViewMatrix() const
 	{
 
-		auto& transform = gCoordinator.GetComponent<Transform>(mCurrentCamera);
+		const auto& transform = gCoordinator.GetComponent<Transform>(mCurrentCamera);
 
 		//first create a rotation matrix around the Y axis
-		glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		const glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		//then create a translation matrix
-		glm::mat4 translate = glm::translate(glm::mat4(1.0f), transform.position);
+		const glm::mat4 translate = glm::translate(glm::mat4(1.0f), transform.position);
 
 		//combine these for the resulting matrix
 		return rotation * translate;
 
+	}
+
+	glm::mat4 CameraSystem::GetProjectionMatrix() const
+	{
+		return mProjectionMatrix;
 	}
 } // MM

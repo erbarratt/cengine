@@ -7,7 +7,7 @@ namespace MM
 		:textureId(0), filepath(path), localBBuffer(nullptr), width(0), height(0), BPP(0)
 	{
 
-		stbi_set_flip_vertically_on_load(true);
+		// stbi_set_flip_vertically_on_load(true);
 		localBBuffer = stbi_load(path.c_str(), &width, &height, &BPP, STBI_rgb_alpha);
 
 		glGenTextures(1, &textureId);

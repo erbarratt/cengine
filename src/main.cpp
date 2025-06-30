@@ -2,11 +2,13 @@
 #include <iostream>
 #include <sstream>
 #include <GLEW/glew.h>
-#include <GLFW/glfw3.h>
+
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
+#include "core/Window.hpp"
 #include "components/Camera.hpp"
+#include "components/Input.hpp"
 #include "components/Transform.hpp"
 #include "render/Shader.hpp"
 #include "render/Renderer.hpp"
@@ -17,34 +19,22 @@
 
 #include "core/Coordinator.hpp"
 #include "systems/CameraSystem.hpp"
+#include "systems/InputSystem.hpp"
 
 Coordinator gCoordinator;
 
 int main()
 {
 
-	//Initialize GLFW
-	if (!glfwInit())
+	MM::Window window;
+	if (!window.Init()) {
 		return -1;
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	/* Create a windowed mode window and its OpenGL context */
-	GLFWwindow *window = glfwCreateWindow(800, 600, "Hello World", nullptr, nullptr);
-	if (!window){ glfwTerminate(); return -1; }
-
-	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
+	}
 
 	if (glewInit() != GLEW_OK) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
 		return -1;
 	}
-
-	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	const float positions[] = {
 		-50.0f, 50.0f, 0.0f, 0.0f,
@@ -82,40 +72,41 @@ int main()
 		MM::Texture texture("../../res/textures/checker-map_tho.png");
 		texture.bind();
 
-	//projection matrixes
-
+	//ECS
 		gCoordinator.Init();
 
 		gCoordinator.RegisterComponent<Camera>();
 		gCoordinator.RegisterComponent<Transform>();
-		auto cameraSystem = gCoordinator.RegisterSystem<MM::CameraSystem>();
+		gCoordinator.RegisterComponent<Input>();
 
-		Signature signature;
-		signature.set(gCoordinator.GetComponentType<Camera>());
-		signature.set(gCoordinator.GetComponentType<Transform>());
-		gCoordinator.SetSystemSignature<MM::CameraSystem>(signature);
+	//input system
+		auto inputSystem = gCoordinator.RegisterSystem<MM::InputSystem>();
+		Signature inputSiganture;
+		inputSiganture.set(gCoordinator.GetComponentType<Input>());
+		gCoordinator.SetSystemSignature<MM::InputSystem>(inputSiganture);
+
+	//camera system
+		auto cameraSystem = gCoordinator.RegisterSystem<MM::CameraSystem>();
+		Signature camerasignature;
+		camerasignature.set(gCoordinator.GetComponentType<Camera>());
+		camerasignature.set(gCoordinator.GetComponentType<Transform>());
+		gCoordinator.SetSystemSignature<MM::CameraSystem>(camerasignature);
 
 		Entity camera = gCoordinator.CreateEntity();
 		gCoordinator.AddComponent<Camera>(camera, Camera{
 			65.0f,
-			4.0f / 3.0f,
+			static_cast<float>(window.mWidth) / static_cast<float>(window.mHeight),
 			0.1f,
 			1000.0f
 		});
-
 		gCoordinator.AddComponent<Transform>(camera, Transform{
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(1.0f, 1.0f, 1.0f),
 		});
-
+		gCoordinator.AddComponent<Input>(camera, Input{});
 		cameraSystem->SetCamera(camera);
-		glm::mat4 proj = cameraSystem->GetProjectionMatrix();
 
-		//where the camera is
-		glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 camRot = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::mat4 view;
 
 		//where the entity is
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
@@ -124,66 +115,25 @@ int main()
 
 	MM::Renderer renderer;
 
-	int frameCount = 0;
-	double lastTime = glfwGetTime();
-	double currentTime;
-
 	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
+	while (!window.shouldWindowlose())
 	{
-		// Measure time and update FPS counter
-		currentTime = glfwGetTime();
-		frameCount++;
 
-		if (currentTime - lastTime >= 1) { // 1 second has passed
-			std::ostringstream title;
-			title << "OpenGL Window - FPS: " << frameCount;
-			glfwSetWindowTitle(window, title.str().c_str());
+		window.UpdateFrameRate();
 
-			frameCount = 0;
-			lastTime = currentTime;
-		}
+		inputSystem->Update(window.mWindow);
 
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-			camPos.y --;
-		} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			camPos.y ++;
-		}
+		cameraSystem->MoveCamera();
 
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			camPos.x ++;
-		} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			camPos.x --;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			camRot.y --;
-		} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			camRot.y ++;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			camPos.z ++;
-		} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			camPos.z --;
-		}
-
-		//first create a rotation matrix around the Y axis
-		glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(camRot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		//then create a translation matrix
-		glm::mat4 translate = glm::translate(glm::mat4(1.0f), camPos);
-		//combine these for the resulting matrix
-		view = rotation * translate;
-
-		shader.setUniformMat4f("u_MVP", proj * view * model);
+		shader.setUniformMat4f("u_MVP", cameraSystem->GenerateProjectionMatrix() * cameraSystem->GetViewMatrix() * model);
 
 		renderer.draw(vao, ibo, vbo, shader);
 
 		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+		window.SwapBuffers();
 
 		/* Poll for and process events */
-		glfwPollEvents();
+		window.PollEvents();
 	}
 
 	glfwTerminate();

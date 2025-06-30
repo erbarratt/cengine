@@ -21,12 +21,12 @@ public:
 
 
 	// Entity methods
-	Entity CreateEntity()
+	[[nodiscard]] Entity CreateEntity() const
 	{
 		return mEntityManager->CreateEntity();
 	}
 
-	void DestroyEntity(Entity entity)
+	void DestroyEntity(const Entity entity) const
 	{
 		mEntityManager->DestroyEntity(entity);
 
@@ -38,13 +38,13 @@ public:
 
 	// Component methods
 	template<typename T>
-	void RegisterComponent()
+	void RegisterComponent() const
 	{
 		mComponentManager->RegisterComponent<T>();
 	}
 
 	template<typename T>
-	void AddComponent(Entity entity, T component)
+	void AddComponent(const Entity entity, T component)
 	{
 		mComponentManager->AddComponent<T>(entity, component);
 
@@ -53,10 +53,11 @@ public:
 		mEntityManager->SetSignature(entity, signature);
 
 		mSystemManager->EntitySignatureChanged(entity, signature);
+
 	}
 
 	template<typename T>
-	void RemoveComponent(Entity entity)
+	void RemoveComponent(const Entity entity) const
 	{
 		mComponentManager->RemoveComponent<T>(entity);
 
@@ -68,13 +69,13 @@ public:
 	}
 
 	template<typename T>
-	T& GetComponent(Entity entity)
+	T& GetComponent(const Entity entity)
 	{
 		return mComponentManager->GetComponent<T>(entity);
 	}
 
 	template<typename T>
-	ComponentType GetComponentType()
+	[[nodiscard]] ComponentType GetComponentType() const
 	{
 		return mComponentManager->GetComponentType<T>();
 	}
@@ -88,24 +89,24 @@ public:
 	}
 
 	template<typename T>
-	void SetSystemSignature(Signature signature)
+	void SetSystemSignature(const Signature signature) const
 	{
 		mSystemManager->SetSignature<T>(signature);
 	}
 
 
 	// Event methods
-	void AddEventListener(EventId eventId, std::function<void(Event&)> const& listener)
+	void AddEventListener(const EventId eventId, std::function<void(Event&)> const& listener) const
 	{
 		mEventManager->AddListener(eventId, listener);
 	}
 
-	void SendEvent(Event& event)
+	void SendEvent(Event& event) const
 	{
 		mEventManager->SendEvent(event);
 	}
 
-	void SendEvent(EventId eventId)
+	void SendEvent(const EventId eventId) const
 	{
 		mEventManager->SendEvent(eventId);
 	}

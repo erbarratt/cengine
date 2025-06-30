@@ -50,4 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-.idea/
+
+#editor files
+.idea/*.*
+/.idea/
+/.idea/*.xml
+.idea
