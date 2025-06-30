@@ -37,7 +37,7 @@ int main()
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval( 1 );
+	glfwSwapInterval(1);
 
 	if (glewInit() != GLEW_OK) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -87,10 +87,12 @@ int main()
 		gCoordinator.Init();
 
 		gCoordinator.RegisterComponent<Camera>();
+		gCoordinator.RegisterComponent<Transform>();
 		auto cameraSystem = gCoordinator.RegisterSystem<MM::CameraSystem>();
 
 		Signature signature;
 		signature.set(gCoordinator.GetComponentType<Camera>());
+		signature.set(gCoordinator.GetComponentType<Transform>());
 		gCoordinator.SetSystemSignature<MM::CameraSystem>(signature);
 
 		Entity camera = gCoordinator.CreateEntity();

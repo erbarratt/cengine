@@ -25,7 +25,6 @@ namespace MM {
 	glm::mat4 CameraSystem::GetProjectionMatrix()
 	{
 		auto& cameraSettings = gCoordinator.GetComponent<Camera>(mCurrentCamera);
-		cameraSettings.aspectRatio = 4.3f;
 		return glm::perspective(glm::radians(cameraSettings.fov), cameraSettings.aspectRatio, cameraSettings.nearPlane, cameraSettings.farPlane);
 	}
 
