@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <GLEW/glew.h>
 
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
@@ -15,7 +14,7 @@ namespace MM
 		int width, height, BPP{};
 	public:
 		unsigned int textureId;
-		Texture(const std::string& path);
+		explicit Texture(const std::string& path);
 		~Texture();
 
 		void bind(unsigned int slot = 0) const;

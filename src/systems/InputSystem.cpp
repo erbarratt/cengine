@@ -21,6 +21,7 @@ namespace MM {
 			auto& inputSettings = gCoordinator.GetComponent<Input>(entity);
 			inputSettings = input;
 		}
+
 	}
 
 } // MM

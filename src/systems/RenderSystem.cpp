@@ -22,11 +22,10 @@ namespace MM
 	void RenderSystem::Render(glm::mat4 projection, glm::mat4 view)
 	{
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		CGL(glClear(GL_COLOR_BUFFER_BIT));
 
 		for (auto const& entity : mEntities)
 		{
-			std::cout << "Rendering entity: " << entity << std::endl;
 			auto& mesh = gCoordinator.GetComponent<Mesh>(entity);
 			auto& material = gCoordinator.GetComponent<Material>(entity);
 			const auto& transform = gCoordinator.GetComponent<Transform>(entity);
@@ -35,9 +34,6 @@ namespace MM
 				//tell opengl we are now using the specified buffer object (by passing the id previously generated)
 				//IN the "target" type we specify, GL_ARRAY_BUFFER = Vertex Attributes
 				CGL(glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo_id));
-
-				//fill the currently bound buffer at the "target" with "size" bytes from a data object and hint at how it will be used
-				CGL(glBufferData(GL_ARRAY_BUFFER, mesh.positionsSize, mesh.positions, GL_STATIC_DRAW));
 
 			//IBO
 				//tell opengl we are now using the specified buffer object (by passing the id previously generated)

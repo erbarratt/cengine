@@ -3,11 +3,6 @@
 
 #pragma once
 
-#include "../render/VertexBuffer.hpp"
-#include "../render/VertexBufferLayout.hpp"
-#include "../render/IndexBuffer.hpp"
-#include "../render/VertexArray.hpp"
-
 struct Mesh
 {
 	float * positions;

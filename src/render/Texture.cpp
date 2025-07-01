@@ -1,5 +1,6 @@
 #include "Texture.hpp"
-#include "stb_image.hpp"
+#include "../../external/stb_image.hpp"
+#include <GLEW/glew.h>
 
 namespace MM
 {
@@ -29,7 +30,7 @@ namespace MM
 
 	Texture::~Texture()
 	{
-		glDeleteTextures(1, &textureId);
+		//glDeleteTextures(1, &textureId);
 	}
 
 	void Texture::bind(unsigned int slot) const
