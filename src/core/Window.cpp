@@ -11,10 +11,11 @@ namespace MM {
 	bool Window::Init()
 	{
 
-		std::cout << glGetString(GL_VERSION) << std::endl;
+		std::cout << "Window Init()" << std::endl;
 
 		//Initialize GLFW
 			if (!glfwInit()) {
+				std::cout << "GLFW Failed to Initialize." << std::endl;
 				return false;
 			}
 
@@ -23,12 +24,13 @@ namespace MM {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		//get monitor res
-		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		// GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		// const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-		std::cout << "Fullscreen Resolution: " << mode->width << "x" << mode->height << std::endl;
-
-		GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Red Rocket Rage",  monitor, nullptr);
+		// std::cout << "Fullscreen Resolution: " << mode->width << "x" << mode->height << std::endl;
+		//
+		// GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Red Rocket Rage",  monitor, nullptr);
+		GLFWwindow *window = glfwCreateWindow(800, 600, "Red Rocket Rage",  nullptr, nullptr);
 		if (!window) {
 			glfwTerminate();
 			std::cout << "GLFW Window Failed to Create." << std::endl;
@@ -39,8 +41,10 @@ namespace MM {
 		glfwSwapInterval(1);
 
 		mWindow = window;
-		mWidth = mode->width;
-		mHeight = mode->height;
+		// mWidth = mode->width;
+		// mHeight = mode->height;
+		mWidth = 800;
+		mHeight = 600;
 
 		return true;
 

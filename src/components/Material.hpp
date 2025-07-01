@@ -8,8 +8,8 @@
 
 struct Material
 {
-	MM::Shader shader;
-	MM::Texture texture;
+	unsigned int shaderProgram;
+	unsigned int textureId;
 };
 
 #endif //MATERIAL_HPP

@@ -50,6 +50,7 @@ public:
 
 		auto signature = mEntityManager->GetSignature(entity);
 		signature.set(mComponentManager->GetComponentType<T>(), true);
+
 		mEntityManager->SetSignature(entity, signature);
 
 		mSystemManager->EntitySignatureChanged(entity, signature);

@@ -28,9 +28,11 @@ int main()
 {
 
 	MM::Window window;
-	if (!window.Init()) {
+	if (window.Init() == false) {
 		return -1;
 	}
+
+	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	if (glewInit() != GLEW_OK) {
 		std::cout << "Failed to initialize GLEW" << std::endl;
@@ -46,7 +48,7 @@ int main()
 		gCoordinator.RegisterComponent<Transform>();
 
 		gCoordinator.RegisterComponent<Mesh>();
-		// gCoordinator.RegisterComponent<Material>();
+		gCoordinator.RegisterComponent<Material>();
 
 
 	//input system
@@ -58,9 +60,25 @@ int main()
 	//camera system
 		auto cameraSystem = gCoordinator.RegisterSystem<MM::CameraSystem>();
 		Signature camerasignature;
+		camerasignature.set(gCoordinator.GetComponentType<Input>());
 		camerasignature.set(gCoordinator.GetComponentType<Camera>());
 		camerasignature.set(gCoordinator.GetComponentType<Transform>());
 		gCoordinator.SetSystemSignature<MM::CameraSystem>(camerasignature);
+
+	//renderable system
+		auto renderableSystem = gCoordinator.RegisterSystem<MM::RenderableSystem>();
+		Signature renderableSignature;
+		renderableSignature.set(gCoordinator.GetComponentType<Mesh>());
+		renderableSignature.set(gCoordinator.GetComponentType<Material>());
+		gCoordinator.SetSystemSignature<MM::RenderableSystem>(renderableSignature);
+
+	//render system
+		auto rendererSystem = gCoordinator.RegisterSystem<MM::RenderSystem>();
+		Signature renderSignature;
+		renderSignature.set(gCoordinator.GetComponentType<Mesh>());
+		renderSignature.set(gCoordinator.GetComponentType<Material>());
+		renderSignature.set(gCoordinator.GetComponentType<Transform>());
+		gCoordinator.SetSystemSignature<MM::RenderSystem>(renderSignature);
 
 		Entity camera = gCoordinator.CreateEntity();
 		gCoordinator.AddComponent<Camera>(camera, Camera{
@@ -77,40 +95,24 @@ int main()
 		gCoordinator.AddComponent<Input>(camera, Input{});
 		cameraSystem->SetCamera(camera);
 
-	//renderable system
-		// auto renderableSystem = gCoordinator.RegisterSystem<MM::RenderableSystem>();
-		// Signature renderableSignature;
-		// renderableSignature.set(gCoordinator.GetComponentType<Mesh>());
-		// renderableSignature.set(gCoordinator.GetComponentType<Material>());
-		// gCoordinator.SetSystemSignature<MM::RenderableSystem>(renderableSignature);
-		//
-		// Entity plane = gCoordinator.CreateEntity();
-		// const float positions[] = {
-		// 	-50.0f, 50.0f, 0.0f, 0.0f,
-		// 	50.0f, 50.0f, 1.0f, 0.0f,
-		// 	50.0f, -50.0f, 1.0f, 1.0f,
-		// 	-50.0f, -50.0f, 0.0f, 1.0f
-		// };
-		// const unsigned int indices[] = {
-		// 	0,1,2,
-		// 	2,3,0
-		// };
-		// renderableSystem->SetMesh(plane, positions, indices);
-		// renderableSystem->SetMaterial(plane, "basic", "../../res/textures/checker-map_tho.png");
-		// gCoordinator.AddComponent<Transform>(plane, Transform{
-		// 	glm::vec3(0.0f, 0.0f, -10.0f),
-		// 	glm::vec3(0.0f, 0.0f, 0.0f),
-		// 	glm::vec3(1.0f, 1.0f, 1.0f),
-		// });
-
-	//render system
-		// auto rendererSystem = gCoordinator.RegisterSystem<MM::RenderSystem>();
-		// Signature renderSignature;
-		// camerasignature.set(gCoordinator.GetComponentType<Camera>());
-		// camerasignature.set(gCoordinator.GetComponentType<Transform>());
-		// renderSignature.set(gCoordinator.GetComponentType<Mesh>());
-		// renderSignature.set(gCoordinator.GetComponentType<Material>());
-		// gCoordinator.SetSystemSignature<MM::RenderableSystem>(renderSignature);
+		Entity plane = gCoordinator.CreateEntity();
+		float positions[] = {
+			-50.0f, 50.0f, 0.0f, 0.0f,
+			50.0f, 50.0f, 1.0f, 0.0f,
+			50.0f, -50.0f, 1.0f, 1.0f,
+			-50.0f, -50.0f, 0.0f, 1.0f
+		};
+		unsigned int indices[] = {
+			0,1,2,
+			2,3,0
+		};
+		renderableSystem->SetMesh(plane, positions, indices);
+		renderableSystem->SetMaterial(plane, "basic", "../../res/textures/checker-map_tho.png");
+		gCoordinator.AddComponent<Transform>(plane, Transform{
+			glm::vec3(0.0f, 0.0f, -10.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(1.0f, 1.0f, 1.0f),
+		});
 
 	/* Loop until the user closes the window */
 	while (!window.shouldWindowlose())
@@ -118,11 +120,11 @@ int main()
 
 		window.UpdateFrameRate();
 
-		inputSystem->Update(window.mWindow);
+		//inputSystem->Update(window.mWindow);
 
-		cameraSystem->MoveCamera();
+		//cameraSystem->MoveCamera();
 
-		//rendererSystem->Render(cameraSystem->GetProjectionMatrix(), cameraSystem->GetViewMatrix());
+		rendererSystem->Render(cameraSystem->GetProjectionMatrix(), cameraSystem->GetViewMatrix());
 		window.SwapBuffers();
 
 		/* Poll for and process events */

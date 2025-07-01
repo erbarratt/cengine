@@ -13,10 +13,10 @@ namespace MM
 
 		//tell opengl we are now using the specified buffer object (by passing the id previously generated)
 		//IN the "target" type we specify, GL_ARRAY_BUFFER = Vertex Attributes
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		//glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 
 		//fill the currently bound buffer at the "target" with "size" bytes from a data object and hint at how it will be used
-		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		//glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 
 	}
 

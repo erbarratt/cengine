@@ -11,9 +11,9 @@ namespace MM
 {
 	class VertexArray {
 	private:
-		unsigned int VAO_id = 0;
 		unsigned int currentIndex = 0;
 	public:
+		unsigned int VAO_id = 0;
 		VertexArray();
 		~VertexArray();
 		void bind() const;

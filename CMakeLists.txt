@@ -25,8 +25,8 @@ add_executable(GameEngine
         src/render/VertexBufferLayout.cpp
         src/render/stb_image.cpp
         src/render/Texture.cpp
-        src/systems/CameraSystem.cpp
         src/core/Window.cpp
+        src/systems/CameraSystem.cpp
         src/systems/InputSystem.cpp
         src/systems/RenderableSystem.cpp
         src/systems/RenderSystem.cpp

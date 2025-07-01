@@ -6,7 +6,7 @@
 
 namespace MM
 {
-	class RenderSystem : System {
+	class RenderSystem : public System {
 		public:
 			RenderSystem();
 			void Render(glm::mat4 projection, glm::mat4 view);

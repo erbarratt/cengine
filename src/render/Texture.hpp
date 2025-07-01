@@ -9,19 +9,20 @@ namespace MM
 {
 	class Texture {
 	private:
-		unsigned int textureId{};
+
 		std::string filepath;
 		unsigned char* localBBuffer;
 		int width, height, BPP{};
 	public:
+		unsigned int textureId;
 		Texture(const std::string& path);
 		~Texture();
 
 		void bind(unsigned int slot = 0) const;
 		void unbind() const;
 
-		inline unsigned int getWidth() const { return width; }
-		inline unsigned int getHeight() const { return height; }
+		[[nodiscard]] inline unsigned int getWidth() const { return width; }
+		[[nodiscard]] inline unsigned int getHeight() const { return height; }
 	};
 }
 

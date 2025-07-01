@@ -3,6 +3,8 @@
 #include "Types.hpp"
 #include <array>
 #include <cassert>
+#include <iostream>
+#include <ostream>
 #include <unordered_map>
 
 
@@ -52,8 +54,7 @@ public:
 
 	T& GetData(Entity entity)
 	{
-		assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Retrieving non-existent component.");
-
+		assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Retrieving non-existent component. Is the component registered in the system signature?");
 		return mComponentArray[mEntityToIndexMap[entity]];
 	}
 

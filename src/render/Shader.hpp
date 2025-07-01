@@ -16,6 +16,7 @@ namespace MM {
 	class Shader {
 
 	public:
+		unsigned int program = 0;
 		explicit Shader(const char* filepath);
 		void bind() const;
 		void setUniformi(const std::string& name, int value);
@@ -26,7 +27,7 @@ namespace MM {
 		void setUniformMat4f(const std::string &name, const glm::mat4 &matrix);
 
 	private:
-		unsigned int program = 0;
+
 		std::unordered_map<std::string, int> uniformLocationCache;
 		static ShaderProgramSource parseShader(const char* filepath);
 		static unsigned int compileShader(unsigned int type, const std::string& source);

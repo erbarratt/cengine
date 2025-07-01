@@ -11,7 +11,7 @@ extern Coordinator gCoordinator;
 
 namespace MM {
 
-	void CameraSystem::SetCamera(const Entity camera)
+	void CameraSystem::SetCamera(Entity camera)
 	{
 		mCurrentCamera = camera;
 		GenerateProjectionMatrix();

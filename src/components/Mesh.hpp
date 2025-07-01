@@ -10,10 +10,13 @@
 
 struct Mesh
 {
+	float * positions;
+	unsigned int positionsSize;
+	unsigned int * indices;
+	unsigned int indicesCount;
 	unsigned int vbo_id;
-	MM::VertexBufferLayout vbl;
-	MM::IndexBuffer ibo;
-	MM::VertexArray vao;
+	unsigned int ibo_id;
+	unsigned int vao_id;
 };
 
 #endif //MESH_HPP
