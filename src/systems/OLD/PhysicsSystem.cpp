@@ -1,4 +1,4 @@
-#include "PhysicsSystem.hpp"
+#include "../PhysicsSystem.hpp"
 
 #include "Components/Gravity.hpp"
 #include "Components/RigidBody.hpp"

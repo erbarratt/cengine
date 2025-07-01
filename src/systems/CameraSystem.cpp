@@ -7,8 +7,6 @@
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
-#include "GLFW/glfw3.h"
-
 extern Coordinator gCoordinator;
 
 namespace MM {
@@ -16,7 +14,7 @@ namespace MM {
 	void CameraSystem::SetCamera(const Entity camera)
 	{
 		mCurrentCamera = camera;
-		mProjectionMatrix = GenerateProjectionMatrix();
+		GenerateProjectionMatrix();
 	}
 
 	void CameraSystem::MoveCamera() const
@@ -51,10 +49,10 @@ namespace MM {
 
 	}
 
-	glm::mat4 CameraSystem::GenerateProjectionMatrix() const
+	void CameraSystem::GenerateProjectionMatrix()
 	{
 		auto& cameraSettings = gCoordinator.GetComponent<Camera>(mCurrentCamera);
-		return glm::perspective(glm::radians(cameraSettings.fov), cameraSettings.aspectRatio, cameraSettings.nearPlane, cameraSettings.farPlane);
+		mProjectionMatrix = glm::perspective(glm::radians(cameraSettings.fov), cameraSettings.aspectRatio, cameraSettings.nearPlane, cameraSettings.farPlane);
 	}
 
 	glm::mat4 CameraSystem::GetViewMatrix() const

@@ -2,7 +2,6 @@
 #define CAMERASYSTEM_HPP
 
 #include "../core/System.hpp"
-#include "GLFW/glfw3.h"
 #include "GLM/glm.hpp"
 
 namespace MM {
@@ -12,7 +11,7 @@ namespace MM {
 		public:
 			void SetCamera(Entity camera);
 			void MoveCamera() const;
-			[[nodiscard]] glm::mat4 GenerateProjectionMatrix() const;
+			void GenerateProjectionMatrix();
 			[[nodiscard]] glm::mat4 GetViewMatrix() const;
 			[[nodiscard]] glm::mat4 GetProjectionMatrix() const;
 		private:

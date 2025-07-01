@@ -1,4 +1,4 @@
-#include "CameraControlSystem.hpp"
+#include "../CameraControlSystem.hpp"
 
 #include "Components/Transform.hpp"
 #include "Core/Coordinator.hpp"

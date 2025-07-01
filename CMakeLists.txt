@@ -18,7 +18,6 @@ link_directories(${CMAKE_SOURCE_DIR}/external/GLEW/lib/Release/x64)
 add_executable(GameEngine
         src/main.cpp
         src/render/Shader.cpp
-        src/render/Renderer.cpp
         src/render/VertexBuffer.cpp
         src/render/IndexBuffer.cpp
         src/render/GLDebug.h
@@ -29,7 +28,8 @@ add_executable(GameEngine
         src/systems/CameraSystem.cpp
         src/core/Window.cpp
         src/systems/InputSystem.cpp
-        src/systems/InputSystem.hpp
+        src/systems/RenderableSystem.cpp
+        src/systems/RenderSystem.cpp
         # add other modules here
 )
 

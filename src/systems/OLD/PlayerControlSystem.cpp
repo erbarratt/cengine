@@ -1,4 +1,4 @@
-#include "PlayerControlSystem.hpp"
+#include "../PlayerControlSystem.hpp"
 
 #include "Components/Player.hpp"
 #include "Components/Thrust.hpp"

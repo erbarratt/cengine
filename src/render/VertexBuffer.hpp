@@ -4,9 +4,8 @@
 namespace MM
 {
 	class VertexBuffer {
-	private:
-		unsigned int m_RendererID = 0;
 	public:
+		unsigned int m_RendererID = 0;
 		VertexBuffer(const void* data, unsigned int size);
 		~VertexBuffer();
 
